@@ -1,5 +1,7 @@
 package com.example.tgsa
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -31,7 +33,7 @@ class GithubReposFragment : Fragment() {
         repos.add(RepoData("hugo", "JakeWharton/hugo", "https://github.com/JakeWharton/hugo"))
         repos.add(RepoData("hugo-academic", "gcushen/hugo-academic", "https://github.com/gcushen/hugo-academic"))
 
-        viewAdapter = RepoListAdapter(repos, { partItem: RepoData -> partItemClicked(partItem) })
+        viewAdapter = RepoListAdapter(repos) { partItem: RepoData -> repoListItemClicked(partItem) }
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview_repos).apply {
             setHasFixedSize(true)
@@ -40,7 +42,9 @@ class GithubReposFragment : Fragment() {
         }
     }
 
-    private fun partItemClicked(partItem: RepoData) {
-        Toast.makeText(this.context, "Clicked on ${partItem.fullName}", Toast.LENGTH_SHORT).show()
+    private fun repoListItemClicked(repoData: RepoData) {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.data = Uri.parse(repoData.url)
+        startActivity(openURL)
     }
 }
