@@ -20,8 +20,8 @@ class GithubReposFragment : Fragment() {
     lateinit var buttonPrev: Button
     lateinit var buttonNext: Button
 
-
     private lateinit var editTextSearch: EditText
+    private lateinit var searchTerm: String
 
     private var page = 1
     private var perPage = 10
@@ -66,8 +66,11 @@ class GithubReposFragment : Fragment() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
                 Utils.hideKeyboard(this.context, v)
                 page = 1
-                searchGithubRepos()
-                return@OnKeyListener true
+                searchTerm = editTextSearch.text.toString()
+                if (searchTerm.isNotBlank()){
+                    searchGithubRepos()
+                    return@OnKeyListener true
+                }
             }
             false
         })
@@ -77,6 +80,6 @@ class GithubReposFragment : Fragment() {
 
     private fun searchGithubRepos() {
         val hugo = SearchGithubReposTask(this)
-        hugo.execute(editTextSearch.text.toString(), page.toString(), perPage.toString())
+        hugo.execute(searchTerm, page.toString(), perPage.toString())
     }
 }
