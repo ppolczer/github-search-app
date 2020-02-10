@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.navigation.findNavController
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -105,5 +106,8 @@ class SearchGithubReposTask(private val githubReposFragment: GithubReposFragment
         val openURL = Intent(Intent.ACTION_VIEW)
         openURL.data = Uri.parse(repoData.htmlUrl)
         githubReposFragment.startActivity(openURL)
+        // Uncomment below code (and comment code above) to open a detail view when clicking on a repo name
+        //val action = GithubReposFragmentDirections.actionGithubReposFragmentToRepoDetail(repoData)
+        //githubReposFragment.view!!.findNavController().navigate(action)
     }
 }

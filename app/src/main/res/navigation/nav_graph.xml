@@ -8,5 +8,20 @@
         android:id="@+id/githubReposFragment"
         android:name="com.example.tgsa.GithubReposFragment"
         android:label="fragment_github_repos"
-        tools:layout="@layout/fragment_github_repos" />
+        tools:layout="@layout/fragment_github_repos" >
+        <action
+            android:id="@+id/action_githubReposFragment_to_repoDetail"
+            app:destination="@id/repoDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/repoDetail"
+        android:name="com.example.tgsa.RepoDetail"
+        android:label="fragment_repo_detail"
+        tools:layout="@layout/fragment_repo_detail" >
+        <action
+            android:id="@+id/action_repoDetail_to_githubReposFragment"
+            app:destination="@id/githubReposFragment" />
+        <argument android:name="repoData"
+            app:argType="com.example.tgsa.RepoData" />
+    </fragment>
 </navigation>
