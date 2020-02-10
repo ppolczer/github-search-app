@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,9 +16,17 @@ class GithubReposFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     lateinit var viewManager: RecyclerView.LayoutManager
+    lateinit var textViewPages: TextView
+    lateinit var buttonPrev: Button
+    lateinit var buttonNext: Button
+
+
+    private lateinit var editTextSearch: EditText
 
     private var page = 1
     private var perPage = 10
+
+    var maxPages = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,35 +45,38 @@ class GithubReposFragment : Fragment() {
             layoutManager = viewManager
         }
 
-        val editTextSearch = view.findViewById<EditText>(R.id.edittext_search)
+        buttonPrev = view.findViewById(R.id.button_prev)
+        buttonPrev.setOnClickListener {
+            if (page > 1){
+                page--
+            }
+            searchGithubRepos()
+        }
+
+        buttonNext = view.findViewById(R.id.button_next)
+        buttonNext.setOnClickListener {
+            if(page < maxPages){
+                page++
+            }
+            searchGithubRepos()
+        }
+
+        editTextSearch = view.findViewById(R.id.edittext_search)
         editTextSearch.setOnKeyListener(View.OnKeyListener { v, keyCode, keyEvent ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
                 Utils.hideKeyboard(this.context, v)
                 page = 1
-                val hugo = SearchGithubReposTask(this)
-                hugo.execute(editTextSearch.text.toString(), page.toString(), perPage.toString())
+                searchGithubRepos()
                 return@OnKeyListener true
             }
             false
         })
 
-        val buttonPrev = view.findViewById<Button>(R.id.button_prev)
-        buttonPrev.setOnClickListener {
-            if (page > 1){
-                page--
-            }
-            Toast.makeText(this.context, "PAGE = $page", Toast.LENGTH_SHORT).show()
-            val hugo = SearchGithubReposTask(this)
-            hugo.execute(editTextSearch.text.toString(), page.toString(), perPage.toString())
-        }
+        textViewPages = view.findViewById<TextView>(R.id.textview_pages)
+    }
 
-        val buttonNext = view.findViewById<Button>(R.id.button_next)
-        buttonNext.setOnClickListener {
-            // TODO: Check if page maximum is reached (max. 1000 results are provided by github)
-            page++
-            Toast.makeText(this.context, "PAGE = $page", Toast.LENGTH_SHORT).show()
-            val hugo = SearchGithubReposTask(this)
-            hugo.execute(editTextSearch.text.toString(), page.toString(), perPage.toString())
-        }
+    private fun searchGithubRepos() {
+        val hugo = SearchGithubReposTask(this)
+        hugo.execute(editTextSearch.text.toString(), page.toString(), perPage.toString())
     }
 }
